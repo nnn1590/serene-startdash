@@ -1,17 +1,19 @@
 #!/bin/bash
-
 set -e
-if [[ $UID == 0 ]]; then
-    echo "You must not run this as root." 1>&2
-    exit 1
+
+if [[ "x${UID}X" != "x0X" ]]; then
+	echo "ERROR: You must run this as root." 1>&2
+	exit 1
 fi
 
 if !(type docker >/dev/null); then
-    echo "Docker is not installing on this machine." 1>&2
-    exit 1
+	echo "ERROR: Docker is not installing on this machine. Please install it and retry." 1>&2
+	exit 1
 fi
-WORKDIR=$(cd $(dirname $0); pwd)
-NAME=serene-startdash
+
+declare _WORKDIR="$(cd -- "$(dirname ${0})"; pwd)"
+declare _NAME="serene-startdash"
 cd ..
-sudo docker build -t build_serenestartdash ${WORKDIR}
-sudo docker run -e NAME=$NAME -e UGID="${UID}:$(id -u)" -v ${WORKDIR}:/debuild/build/${NAME}-source:ro -v ${WORKDIR}/out:/deb -it build_serenestartdash
+docker build -t build_serenestartdash ${_WORKDIR}
+docker run -e "NAME=${_NAME}" -e UGID="${UID}:$(id -u)" -v "${_WORKDIR}:/debuild/build/${_NAME}-source:ro" -v "${_WORKDIR}/out:/deb" -it build_serenestartdash
+unset _WORKDIR _NAME
