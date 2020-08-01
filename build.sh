@@ -15,5 +15,5 @@ declare _WORKDIR="$(cd -- "$(dirname ${0})"; pwd)"
 declare _NAME="serene-startdash"
 cd ..
 docker build -t build_serenestartdash ${_WORKDIR}
-docker run -e "NAME=${_NAME}" -e UGID="${UID}:$(id -u)" -v "${_WORKDIR}:/debuild/build/${_NAME}-source:ro" -v "${_WORKDIR}/out:/deb" -it build_serenestartdash
+docker run -e "_NAME=${_NAME}" -e UGID="${UID}:$(id -u)" -v "${_WORKDIR}:/debuild/build/${_NAME}-source:ro" -v "${_WORKDIR}/out:/deb" -it build_serenestartdash
 unset _WORKDIR _NAME
